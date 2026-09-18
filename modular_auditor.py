@@ -28,7 +28,7 @@ def process_delivery(current_total, new_value):
   return current_total
 
 def calculate_tax(amount):
-  pass
+  return amount * 0.1
 
 def generate_report(total_units, tax, failed_attempts):
   print(f'Total Units Processed: {total_units}')
@@ -38,7 +38,7 @@ def generate_report(total_units, tax, failed_attempts):
 while inventory < 500:
   user_input = get_valid_input()
   if user_input == 'quit':
-    tax = inventory * 0.1
+    tax = calculate_tax(inventory)
     generate_report(inventory, tax, failed)
     break
   else:
