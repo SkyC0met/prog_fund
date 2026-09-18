@@ -1,4 +1,5 @@
 inventory = 0
+tax = 0
 new_value = 0
 failed = 0
 
@@ -29,14 +30,18 @@ def process_delivery(current_total, new_value):
 def calculate_tax(amount):
   pass
 
-def generate_report(total_units, failed_attempts):
+def generate_report(total_units, tax, failed_attempts):
   print(f'Total Units Processed: {total_units}')
+  print(f'Total Tax: {tax}')
   print(f'Number of Failed/Rejected Entries: {failed_attempts}')
 
 while inventory < 500:
   user_input = get_valid_input()
   if user_input == 'quit':
-    generate_report(inventory, failed)
+    tax = inventory * 0.1
+    generate_report(inventory, tax, failed)
     break
   else:
     inventory = process_delivery(inventory, user_input)
+else:
+  print('ALERT YOU HAVE EXCEEDED 500 UNITS')
