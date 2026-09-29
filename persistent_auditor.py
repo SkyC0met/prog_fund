@@ -17,7 +17,7 @@ def smart_input(user_input):
 def load_inv():
   global quantity_tt, transaction_history, current_order_id
 
-  print('Current orders:\n')
+  print('Current orders:')
   try:
     with open('orders.txt', 'r') as f:
         lines = f.readlines()
@@ -33,7 +33,6 @@ def load_inv():
                 current_order_id = order_id
   except FileNotFoundError:
     pass
-  print("\n")
 
 def save_inv(total, history):
   with open('inv.txt', 'w') as file:
@@ -75,7 +74,7 @@ def process_delivery(prod_name, quantity):
       file.write(f'{current_order_id}, {prod_name}, {quantity}\n')
 
   print(f'New order added: \n{current_order_id}, {prod_name}, {quantity}')
-  print('Order successfully saved t orders.txt')
+  print('Order successfully saved to orders.txt')
 
 def calculate_tax(amount):
   return amount * 0.1

@@ -1,0 +1,2 @@
+Final quantity: 312
+Transaction history: [100, 200, 12]
