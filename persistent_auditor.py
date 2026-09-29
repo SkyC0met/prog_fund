@@ -1,6 +1,6 @@
 import os
 
-quantity = 0
+quantity_tt = 0
 failed = 0
 transaction_history = []
 current_order_id = 1000
@@ -14,8 +14,8 @@ def smart_input(user_input):
     raise QuitError
   return isquit
 
-def load_inventory():
-  global quantity_total, transaction_history, current_order_id
+def load_inv():
+  global quantity_tt, transaction_history, current_order_id
 
   print('Current orders:\n')
   try:
@@ -26,14 +26,19 @@ def load_inventory():
             parts = line.strip().split(',')
             if len(parts) == 3:
                 order_id = int(parts[0].strip())
-                qty = int(parts[2].strip())
+                quantity = int(parts[2].strip())
                 
-                transaction_history.append(qty)
-                quantity_total += qty
+                transaction_history.append(quantity)
+                quantity_tt += quantity
                 current_order_id = order_id
   except FileNotFoundError:
     pass
   print("\n")
+
+def save_inv(total, history):
+  with open('inv.txt', 'w') as file:
+    file.write(f'Final quantity: {total}\n')
+    file.write(f'Transaction history: {history}\n')
 
 def get_valid_input():
   global failed
@@ -60,12 +65,17 @@ def get_valid_input():
       print('Please enter a number')
 
 def process_delivery(prod_name, quantity):
+  global current_order_id
+  current_order_id += 1
   try:
-    with open('orders.txt', 'a') as f:
-      order_num = 1000
-      f.write(f'1001, {prod_name}, {quantity}\n')
+    with open('orders.txt', 'a') as file:
+      file.write(f'{current_order_id}, {prod_name}, {quantity}\n')
   except FileNotFoundError:
-    open('orders.txt', 'x')
+    with open('orders.txt', 'w') as file:
+      file.write(f'{current_order_id}, {prod_name}, {quantity}\n')
+
+  print(f'New order added: \n{current_order_id}, {prod_name}, {quantity}')
+  print('Order successfully saved t orders.txt')
 
 def calculate_tax(amount):
   return amount * 0.1
@@ -76,17 +86,22 @@ def generate_report(total_units, tax, failed_attempts):
   print(f'Number of Failed/Rejected Entries: {failed_attempts}')
 
 def main():
-  global quantity
+  global quantity_tt, transaction_history
 
-  while quantity < 500:
+  load_inv()
+
+  while quantity_tt < 500:
     user_input = get_valid_input()
     if user_input == 'quit':
-      tax = calculate_tax(quantity)
-      generate_report(quantity, tax, failed)
+      tax = calculate_tax(quantity_tt)
+      generate_report(quantity_tt, tax, failed)
+      save_inv(quantity_tt, transaction_history)
       break
     else:
       prod_name, quantity = user_input
-      process_delivery(quantity, user_input)
+      transaction_history.append(quantity)
+      quantity_tt += quantity
+      process_delivery(prod_name, quantity)
   else:
     print('ALERT YOU HAVE EXCEEDED 500 UNITS')
 
